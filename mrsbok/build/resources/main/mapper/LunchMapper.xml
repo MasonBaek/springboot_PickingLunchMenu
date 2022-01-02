@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lunch.mrsbok.mapper.LunchMapperInteface">
+
+    <select id="doLogin" resultType="boolean">
+        select if(count(*),'true','false')
+        from lunch.member
+        where id = #{id}
+    </select>
+
+    <select id="getMaxStoreNum" resultType="int">
+        select max(storeNum)
+        from lunch.store
+    </select>
+
+    <select id="getStore" resultType="String">
+        select storeName
+        from lunch.store
+        where storeNum = #{storeNum}
+    </select>
+</mapper>
