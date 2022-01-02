@@ -7,7 +7,9 @@
 
 > ## Controller
 >  * ViewContoller
+>    * view 페이지 이동
 >  * MainController
+>    * api통신
 
 
 > ## 환경 
