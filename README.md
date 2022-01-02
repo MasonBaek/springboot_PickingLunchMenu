@@ -16,5 +16,3 @@
 >  * AWS tomcat -> war 배포 
 >  * mysql
 >  * mybatis
->  * ps. TDD로 도전하다 실패 ... TEST는 구축 스킬이 많이 부족해 로컬에서 직접구축
-
