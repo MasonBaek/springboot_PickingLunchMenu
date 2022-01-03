@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lunch.mrsbok.mapper.LunchMapperInteface">
+<mapper namespace="com.lunch.mrsbok.mapper.LunchMapperInterface">
 
     <select id="doLogin" resultType="boolean">
         select if(count(*),'true','false')
@@ -12,7 +12,7 @@
     </select>
 
     <select id="getMaxStoreNum" resultType="int">
-        select max(storeNum)
+        select count(storeNum)
         from lunch.store
     </select>
 

@@ -1,6 +1,6 @@
 package com.lunch.mrsbok.controller;
 
-import com.lunch.mrsbok.mapper.LunchMapperInteface;
+import com.lunch.mrsbok.mapper.LunchMapperInterface;
 import com.lunch.mrsbok.service.LunchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ import java.util.List;
 public class ViewController {
   Logger logger = LoggerFactory.getLogger(ViewController.class);
   
-  private final LunchMapperInteface lunchMapperInteface;
+  private final LunchMapperInterface lunchMapperInterface;
   private final LunchService lunchService;
   
-  public ViewController(LunchMapperInteface lunchMapperInteface,
+  public ViewController(LunchMapperInterface lunchMapperInterface,
                         LunchService lunchService) {
-    this.lunchMapperInteface = lunchMapperInteface;
+    this.lunchMapperInterface = lunchMapperInterface;
     this.lunchService = lunchService;
   }
   
