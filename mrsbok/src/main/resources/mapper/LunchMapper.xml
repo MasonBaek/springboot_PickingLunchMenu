@@ -21,4 +21,51 @@
         from lunch.store
         where storeNum = #{storeNum}
     </select>
+    <select id="haveIChosenStore" resultType="com.lunch.mrsbok.domain.HaveIChosenStoreVO">
+        select if(count(*), true, false) as chosen , storePicked, office
+        from lunch.choicestore
+        where id = #{id} and date = #{today}
+    </select>
+
+    <select id="checkStore" resultType="boolean">
+        select if(count(*), true, false )
+        from lunch.choicestore
+        where date = #{today} and id = #{id}
+    </select>
+
+    <select id="getDateSeq" resultType="int">
+        select if(max(date_seq), max(date_seq) ,0)
+        from lunch.choicestore
+        where date = #{today}
+    </select>
+
+    <insert id="choiceStore">
+        insert into lunch.choicestore(date_seq, date, id , storePicked, office)
+        values (#{date_seq}, #{today}, #{id}, #{storePicked}, #{office})
+    </insert>
+
+    <update id="updateChoiceStore">
+        update lunch.choicestore
+        set storePicked = #{storePicked}, office = #{office}
+        where date = '22-01-05' and id = #{id}
+    </update>
+
+    <select id="checkStoreForList" resultType="int">
+        select if(count(*), count(*), false) as checkStore
+        from lunch.choicestore
+        where date = #{today};
+    </select>
+
+    <select id="getStoreListBok" resultType="StorePickedListVO">
+        select id, storePicked, office
+        from lunch.choicestore
+        where date = #{today} AND date_seq = #{index} AND office = 'bok'
+    </select>
+    <select id="getStoreListThe" resultType="StorePickedListVO">
+        select id, storePicked, office
+        from lunch.choicestore
+        where date = #{today} AND date_seq = #{index} AND office = 'the'
+    </select>
+
+
 </mapper>

@@ -10,8 +10,9 @@
 body{
     margin: 0 auto;
     padding: 0;
-
 }
+ul{margin:0;}
+dd{margin:0;}
 .wraper{
     margin: 0 auto;
     width: 100%;
@@ -27,6 +28,7 @@ body{
     align-items: center;
     padding:0 30px;
     box-sizing: border-box;
+    justify-content: space-between;
 }
 
 .wraper .header .logo{
@@ -34,8 +36,10 @@ body{
     font-size: 75px;
     margin:0;
 }
-.wraper .header #clock{
-    margin: 30px auto ;
+.wraper .header .logo:hover{
+    color:#555;
+}
+.wraper .header #date{
     border:none;
     box-sizing: border-box;
     width:450px;
@@ -43,7 +47,23 @@ body{
     font-size:70px;
     text-align:center;
 }
+.wraper .header #clock{
+    border:none;
+    box-sizing: border-box;
+    width:450px;
+    color:#666;
+    font-size:70px;
+    text-align:center;
+}
+.wraper .header div.myPick{}
+.wraper .header div.myPick dl{
+    display:flex;
+}
+.wraper .header div.myPick dl dd{
+    font-weight:900;
+}
 .wraper .header .logout {
+    margin-left:50px;
     padding: 20px 20px;
     border: 0;
     background: burlywood;
@@ -61,34 +81,41 @@ body{
     display: flex;
     margin: 0 auto;
 }
-.office {
+.container .office {
     display:flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     width:10%;
     border-right: 1px solid #666;
+    border-bottom: 1px solid #666;
 }
-.office label, input {
+.container .office label, input {
     display:block;
     margin: 5px;
     font-size: 2vw;
     font-weight: 600;
 }
-.office input {
+.container .office input {
     display:none;
 }
-.office label{
-    border:1px solid #121212;
+.container .office label{
+    border: 1px solid #999;
+    color: #999;
     border-radius:5px;
     padding:10px 20px;
     font-size:27px;
     cursor:pointer;
     transition:0.3s;
 }
-.office input:checked + label{
-    background:grey;
-    color:#fff;
+.container .office label:hover{
+    background:#c9f6d1;
+}
+
+.container .office input:checked + label{
+    background:#c3d08b;
+    color:#121212;
+    box-shadow: 0px 2px 8px 2px #ccc;
 }
 
 .vertical {
@@ -103,6 +130,7 @@ body{
     flex-wrap: wrap;
     padding-top:10px;
     padding-left:10px;
+    border-bottom:1px solid #666;
 }
 .menu .store {
     width: 170px;
@@ -116,6 +144,13 @@ body{
     outline:none;
     border-radius:5px;
     word-break: keep-all;
+}
+.menu .store:hover{
+    background:#bbb;
+}
+.menu .picked{
+    background:#8cb6c0;
+    color:#fff;
 }
 /* 팝업(모달) 시작 */
 
