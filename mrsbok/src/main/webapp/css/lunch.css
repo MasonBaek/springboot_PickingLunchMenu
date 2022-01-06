@@ -7,11 +7,12 @@
 *{
     font-family: 'Pretendard-Regular';
 }
-body{
-    margin: 0 auto;
+body, h1, h2, h3, h4 ,h5, h6,div,p, dl{
+    margin: 0;
     padding: 0;
 }
-ul{margin:0;}
+ul{margin:0; padding:0; list-style-type: none;}
+
 dd{margin:0;}
 .wraper{
     margin: 0 auto;
@@ -39,31 +40,54 @@ dd{margin:0;}
 .wraper .header .logo:hover{
     color:#555;
 }
+.wraper .header .dateAndTime{
+    display:flex;
+}
+.wraper .header .dateAndTime > div{
+    margin:0 20px;
+}
 .wraper .header #date{
     border:none;
     box-sizing: border-box;
-    width:450px;
     color:#666;
-    font-size:70px;
+    font-size:50px;
     text-align:center;
 }
 .wraper .header #clock{
     border:none;
     box-sizing: border-box;
-    width:450px;
     color:#666;
-    font-size:70px;
+    font-size:50px;
     text-align:center;
 }
-.wraper .header div.myPick{}
+.wraper .header div.myBox{
+    display:flex;
+}
+.wraper .header div.myPick{
+    margin-right:20px;
+}
 .wraper .header div.myPick dl{
     display:flex;
 }
 .wraper .header div.myPick dl dd{
     font-weight:900;
 }
+.wraper .header button.doNotEat{
+    padding: 20px 20px;
+    border: 0;
+    background: hotpink;
+    color:#fff;
+    font-size:20px;
+    font-weight:600;
+    border-radius:5px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.wraper .header button.doNotEat:hover{
+    background: red;
+}
 .wraper .header .logout {
-    margin-left:50px;
+    margin-left:10px;
     padding: 20px 20px;
     border: 0;
     background: burlywood;
@@ -72,14 +96,14 @@ dd{margin:0;}
     font-weight:600;
     border-radius:5px;
     cursor:pointer;
+    transition:0.3s;
 }
 .wraper .header .logout:hover{
     background:darkgoldenrod;
-    transition:0.3s;
 }
 .container{
     display: flex;
-    margin: 0 auto;
+    margin: 0 auto 0px auto;
 }
 .container .office {
     display:flex;
@@ -89,7 +113,9 @@ dd{margin:0;}
     width:10%;
     border-right: 1px solid #666;
     border-bottom: 1px solid #666;
-}
+}.container .office h3{
+    margin-bottom:20px;
+ }
 .container .office label, input {
     display:block;
     margin: 5px;
@@ -152,6 +178,56 @@ dd{margin:0;}
     background:#8cb6c0;
     color:#fff;
 }
+
+div.storePicked{display:flex;}
+div.storePicked > div{
+    width:50%;
+    box-sizing:border-box;
+    border-bottom:1px solid #666;
+}
+div.storePicked > div:first-child{
+    border-right:1px solid #666;
+}
+div.storePicked div h3{
+    text-align:center;
+    font-size:28px;
+    padding:30px;
+    border-bottom:1px solid #666;
+}
+div.storePicked div div.nonStore{
+    color:#666;
+    font-size:20px;
+    text-align:center;
+    margin:50px 0;
+}
+div.storePicked div ul.chosenStoreList{
+    margin:20px 0 50px 0;
+}
+div.storePicked div ul.chosenStoreList li{
+    display:flex;
+    justify-content: center;
+    margin-bottom:5px;
+}
+div.storePicked div ul.chosenStoreList li dl{
+    display:flex;
+    justify-content: center;
+    margin:0 10px;
+}
+div.storePicked div ul.chosenStoreList li dl dt{
+    margin-right:5px;
+}
+div.storePicked div ul.chosenStoreList li dl dd{
+    font-weight:bold;
+}
+
+/*룰렛*/
+div.storePicked div div.roullette_box{
+    text-align:center;
+}
+div.storePicked div div.roullette_box button{
+    display:block;
+}
+
 /* 팝업(모달) 시작 */
 
 .layer-popup {
