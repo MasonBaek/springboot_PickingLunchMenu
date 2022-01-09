@@ -14,6 +14,7 @@ body, h1, h2, h3, h4 ,h5, h6,div,p, dl{
 ul{margin:0; padding:0; list-style-type: none;}
 
 dd{margin:0;}
+button{cursor:pointer;}
 .wraper{
     margin: 0 auto;
     width: 100%;
@@ -40,20 +41,20 @@ dd{margin:0;}
 .wraper .header .logo:hover{
     color:#555;
 }
-.wraper .header .dateAndTime{
+.dateAndTime{
     display:flex;
 }
-.wraper .header .dateAndTime > div{
+.dateAndTime > div{
     margin:0 20px;
 }
-.wraper .header #date{
+div#date{
     border:none;
     box-sizing: border-box;
     color:#666;
     font-size:50px;
     text-align:center;
 }
-.wraper .header #clock{
+div#clock{
     border:none;
     box-sizing: border-box;
     color:#666;
@@ -179,7 +180,7 @@ dd{margin:0;}
     color:#fff;
 }
 
-div.storePicked{display:flex;}
+div.storePicked{display:flex; }
 div.storePicked > div{
     width:50%;
     box-sizing:border-box;
@@ -220,12 +221,9 @@ div.storePicked div ul.chosenStoreList li dl dd{
     font-weight:bold;
 }
 
-/*룰렛*/
-div.storePicked div div.roullette_box{
-    text-align:center;
-}
-div.storePicked div div.roullette_box button{
-    display:block;
+/* 파이 차트 */
+div.storePicked div div.pie-chart{
+    margin-bottom:100px;
 }
 
 /* 팝업(모달) 시작 */
@@ -283,3 +281,60 @@ div.storePicked div div.roullette_box button{
 }
 
 /* 팝업(모달) 끝 */
+
+/* 메뉴 페이지 */
+#menu{}
+#menu .dateAndTime{
+    justify-content: center;
+    padding:30px;
+}
+#menu .menu_container{
+    display:flex;
+    justify-content: center;
+}
+#menu .menu_container > section{margin:0 20px;}
+#menu .menu_container > section.office_section{}
+#menu .menu_container > section.office_section input{display:none;}
+#menu .menu_container > section.office_section input + label{
+    display:block;
+    background:#888;
+    padding:30px;
+    border-radius:5px;
+    color:#fff;
+    cursor:pointer;
+    margin-bottom:20px;
+    text-align:center;
+    font-size:18px;
+}
+#menu .menu_container > section.office_section input:checked + label{
+    background:#3498db;
+}
+#menu .menu_container > section.office_section input + label span{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+#menu .menu_container > section.menu_section{
+    border:2px solid #999;
+}
+#menu .menu_container > section.menu_section ul{
+    max-height: 80vh;
+    overflow-y:auto;
+}
+#menu .menu_container > section.menu_section ul li{
+
+}
+#menu .menu_container > section.menu_section ul li:last-child{
+
+}
+#menu .menu_container > section.menu_section ul li button{
+    width:100%;
+    padding:20px 70px;
+    box-sizing: border-box;
+    background:#fff;
+    border:0;
+    border-bottom:1px solid #ccc;
+}
+
+
