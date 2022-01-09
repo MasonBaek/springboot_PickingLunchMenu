@@ -175,7 +175,7 @@
             "storePicked" : storePicked,
             "office" : office
         }
-        alert(JSON.stringify(StorePickedVO));
+        // alert(JSON.stringify(StorePickedVO));
         if(storePicked!=''){
             $.ajax({
                 url:"/api/choice",
@@ -184,7 +184,15 @@
                 contentType : "application/json",
                 success:function (data) {
                     if (data.result == 'success') {
-                        location.reload();
+	                      Swal.fire({
+	                        title: "식당 선택 완료",
+	                        icon: "success",//"info,success,warning,error" 중 택1
+	                        confirmButtonText: "확인"
+	                      }).then((result) => {
+                          if (result.isConfirmed) {
+                            location.reload();
+                          }
+                        });
                     }else if(data.result == success){
                         alert('문자열아이다잉')
                     }else {
@@ -301,12 +309,13 @@
     let datasets;
     let config;
     let canvasBok;
+    let canvasThe;
     let pieChart;
     let checkStoreListBok;
     let storeResult;
     let choiceCountARR;
     let choiceStoreARR;
-    
+    let bgColor;
 </script>
 
 </body>

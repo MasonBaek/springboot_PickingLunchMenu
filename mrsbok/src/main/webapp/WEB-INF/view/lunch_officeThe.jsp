@@ -23,5 +23,90 @@
 				</li>
 			</c:forEach>
 		</ul>
+		
+		<div class="pie-chart">
+			<canvas id="canvasThe" width="400" height="400"></canvas>
+		</div><%--.pie-chart--%>
+		
+		<script>
+      // 파이차트 구현
+      checkStoreListThe = [];
+      <c:forEach var="chosenStore" items="${checkStoreListThe}">
+      checkStoreListThe.push("${chosenStore.storePicked}");
+      </c:forEach>
+
+      storeResult = {};
+
+      checkStoreListThe.forEach((index) => {
+        storeResult[index] = (storeResult[index] || 0)+1;
+      });
+
+      storeResult = JSON.stringify(storeResult);
+      storeResult = storeResult.slice(0, -1);
+      storeResult = storeResult.substr(1);
+      storeResult = storeResult.split(",");
+
+      choiceCountARR = [];
+      choiceStoreARR = [];
+      storeResult.forEach((item, index) => {
+        let itemArr = item.split(":");
+        choiceCountARR.push(Number(itemArr[itemArr.length - 1]));
+        choiceStoreARR.push(itemArr[0].slice(0, -1).substr(1));
+      });
+
+      bgColor = ['#F44336','#29B6F6','#FFEE58','#8D6E63','#FF7043','#FFA726','#263238','#3949AB'];
+
+      dataset = {
+        label: "식당 선택률",
+        backgroundColor: bgColor,//라벨별 컬러설정
+        data: choiceCountARR
+      }
+      labels=choiceStoreARR;
+      datasets={ datasets:[dataset], labels:labels }
+      console.log(dataset);
+
+      config = {
+        type: 'pie',
+        data: datasets, //데이터 셋
+        animation:false,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, //true 하게 되면 캔버스 width,height에 따라 리사이징된다.
+          legend: {
+            position: 'bottom',
+            fontColor: 'black',
+            align: 'center',
+            display: true,
+            fullWidth: true,
+            labels: {
+              fontColor: 'rgb(0, 0, 0)'
+            }
+          },
+          plugins: {
+            labels: [
+              {
+                render: 'label',
+                fontSize:'15',
+                fontStyle: 'bold',
+                position:'outside'
+              },
+              {
+                render: function (args) {
+                  return args.value + "표";
+                },
+                fontSize:'13',
+                fontStyle: 'bold',
+                fontColor:'#fff'
+                // position:'outside'
+              }
+            ]
+          }
+        }
+      }
+
+      canvasThe = document.getElementById('canvasThe');
+      pieChart = new Chart(canvasThe,config);
+		
+		</script>
 	</c:otherwise>
 </c:choose>

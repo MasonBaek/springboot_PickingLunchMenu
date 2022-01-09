@@ -53,24 +53,27 @@
         choiceCountARR.push(Number(itemArr[itemArr.length - 1]));
         choiceStoreARR.push(itemArr[0].slice(0, -1).substr(1));
       });
+      
+      bgColor = ['#F44336','#29B6F6','#FFEE58','#8D6E63','#FF7043','#FFA726','#263238','#3949AB'];
 			
       dataset = {
         label: "식당 선택률",
-	      backgroundColor: ['#ffd950', '#02bc77', '#28c3d7', '#FF6384'],//라벨별 컬러설정
-
+	      backgroundColor: bgColor,//라벨별 컬러설정
 	      data: choiceCountARR
       }
       labels=choiceStoreARR;
       datasets={ datasets:[dataset], labels:labels }
+			console.log(dataset);
 
       config = {
         type: 'pie',
 	      data: datasets, //데이터 셋
+	      animation:false,
 				options: {
           responsive: true,
 					maintainAspectRatio: false, //true 하게 되면 캔버스 width,height에 따라 리사이징된다.
 					legend: {
-            position: 'top',
+            position: 'bottom',
 						fontColor: 'black',
 						align: 'center',
 						display: true,
@@ -80,12 +83,23 @@
             }
           },
 					plugins: {
-            labels: {//두번째 script태그를 설정하면 각 항목에다가 원하는 데이터 라벨링을 할 수 있다.
-              render: 'value',
-	            fontColor: 'black',
-	            fontSize: 15,
-	            precision: 2
-            }
+            labels: [
+              {
+                render: 'label',
+	              fontSize:'15',
+                fontStyle: 'bold',
+	              position:'outside'
+              },
+              {
+                render: function (args) {
+                  return args.value + "표";
+                },
+                fontSize:'13',
+                fontStyle: 'bold',
+	              fontColor:'#fff'
+                // position:'outside'
+              }
+            ]
           }
         }
       }
