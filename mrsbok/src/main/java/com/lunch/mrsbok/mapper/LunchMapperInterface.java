@@ -1,5 +1,4 @@
 package com.lunch.mrsbok.mapper;
-
 import com.lunch.mrsbok.domain.HaveIChosenStoreVO;
 import com.lunch.mrsbok.domain.MemberVO;
 import com.lunch.mrsbok.domain.StorePickedListVO;
@@ -7,6 +6,7 @@ import com.lunch.mrsbok.domain.StorePickedVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 @Mapper
 @Repository
@@ -34,8 +34,8 @@ public interface LunchMapperInterface {
   // 오늘 식당이 들으가있는가 체크해보자
   int checkStoreForList(String today);
   // 오늘 식당이 들으가있는가 체크 후 false 아니면-> index반환됨 반환된 인데스로 for 고고씽
-  StorePickedListVO getStoreListBok(String today, int index);
-  StorePickedListVO getStoreListThe(String today, int index);
+  List<StorePickedListVO> getStoreListBok(String today);
+  List<StorePickedListVO> getStoreListThe(String today);
   
   // Date_seq 가져오기 0 아니면 현재 저장값중에 Max -> 가공 할때 +1 해주면됨
   int getDateSeq(String today);

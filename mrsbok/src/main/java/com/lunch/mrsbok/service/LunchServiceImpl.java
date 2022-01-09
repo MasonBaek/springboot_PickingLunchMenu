@@ -1,17 +1,15 @@
 package com.lunch.mrsbok.service;
-
 import com.lunch.mrsbok.domain.StorePickedListVO;
 import com.lunch.mrsbok.domain.StorePickedVO;
 import com.lunch.mrsbok.mapper.LunchMapperInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 @Service
 public class LunchServiceImpl implements LunchService {
 	
@@ -47,9 +45,11 @@ public class LunchServiceImpl implements LunchService {
 		String office = storePickedVO.getOffice();
 		String storePicked = storePickedVO.getStorePicked();
 		if(lunchMapperInterface.checkStore(id, today)){ // 있으머는 어~~~업데이트
+			logger.info("업데이트");
 			lunchMapperInterface.updateChoiceStore(id, today, storePicked, office);
 		}else{ // 없으면 인사트
 			int seq = lunchMapperInterface.getDateSeq(today) + 1;
+			logger.info("인써트");
 			lunchMapperInterface.choiceStore(id, today, storePicked, office,seq);
 		}
 		logger.info(" Service -> choiceStore() start");
@@ -59,27 +59,17 @@ public class LunchServiceImpl implements LunchService {
 	//전체 유저의 식당,사무실 리스트 가져오기
 	@Override
 	public List checkStoreListBok(String today) {
-		int index = lunchMapperInterface.checkStoreForList(today);
 		List<StorePickedListVO> list = new ArrayList<>();
-		if( index != 0){
-			for(int i = 1; i <= index; i++){
-				list.add(lunchMapperInterface.getStoreListBok(today,i));
-			}
-		}
-		logger.info("@@@@@Service -> list : "+ list);
+		list.addAll(lunchMapperInterface.getStoreListBok(today));
+		logger.info("\n Service -> checkStoreListBok -> list : "+ list);
 		return list;
 	}
 	//전체 유저의 식당,사무실 리스트 가져오기
 	@Override
 	public List checkStoreListThe(String today) {
-		int index = lunchMapperInterface.checkStoreForList(today);
 		List<StorePickedListVO> list = new ArrayList<>();
-		if( index != 0){
-			for(int i = 1; i <= index; i++){
-				list.add(lunchMapperInterface.getStoreListThe(today,i));
-			}
-		}
-		logger.info("@@@@@Service -> list : "+ list);
+		list.addAll(lunchMapperInterface.getStoreListThe(today));
+		logger.info("\n Service -> checkStoreListThe-> list : "+ list);
 		return list;
 	}
 }

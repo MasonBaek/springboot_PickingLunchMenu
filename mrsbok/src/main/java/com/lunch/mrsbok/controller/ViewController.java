@@ -1,5 +1,4 @@
 package com.lunch.mrsbok.controller;
-
 import com.lunch.mrsbok.domain.HaveIChosenStoreVO;
 import com.lunch.mrsbok.mapper.LunchMapperInterface;
 import com.lunch.mrsbok.service.LunchService;
@@ -8,13 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-
 @Controller
 @RequestMapping("/*")
 public class ViewController {
@@ -41,7 +38,6 @@ public class ViewController {
   }
   @RequestMapping("/index")
   public String index2nd() {
-
     return "redirect:/";
   }
   
@@ -79,8 +75,8 @@ public class ViewController {
       model.addAttribute("choiceStore",false);
     }
     //전체 유저의 식당,사무실 리스트 가져오기
-    List checkStoreListThe = lunchService.checkStoreListBok(today);
-    List checkStoreListBok = lunchService.checkStoreListThe(today);
+    List checkStoreListThe = lunchService.checkStoreListThe(today);
+    List checkStoreListBok = lunchService.checkStoreListBok(today);
     // [0] 번 인데스가 '1'이면 리스트 있음 '0'이면 없음
     model.addAttribute("checkStoreListThe", checkStoreListThe);
     model.addAttribute("checkStoreListBok", checkStoreListBok);
@@ -89,5 +85,25 @@ public class ViewController {
     //model.
     return "lunch";
   }
-
+  
+  @RequestMapping("/lunch_officeBok")
+  public String lunch_officeBok(Model model) {
+    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
+    List checkStoreListBok = lunchService.checkStoreListBok(today);
+    model.addAttribute("checkStoreListBok", checkStoreListBok);
+    return "lunch_officeBok";
+  }
+  
+  @RequestMapping("/lunch_officeThe")
+  public String lunch_officeThe(Model model) {
+    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
+    List checkStoreListThe = lunchService.checkStoreListThe(today);
+    model.addAttribute("checkStoreListThe", checkStoreListThe);
+    return "lunch_officeThe";
+  }
+  
+  @RequestMapping("/menu")
+  public String menu() {
+    return "menu";
+  }
 }
