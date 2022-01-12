@@ -1,9 +1,6 @@
 package com.lunch.mrsbok.controller;
 
-import com.lunch.mrsbok.domain.LunchVO;
-import com.lunch.mrsbok.domain.MemberVO;
-import com.lunch.mrsbok.domain.ResultVO;
-import com.lunch.mrsbok.domain.StorePickedVO;
+import com.lunch.mrsbok.domain.*;
 import com.lunch.mrsbok.mapper.LunchMapperInterface;
 import com.lunch.mrsbok.service.LunchService;
 import org.slf4j.Logger;
@@ -14,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/api/*")
@@ -55,6 +55,26 @@ public class MainController {
     return new ResultVO("success");
     //return new ResultVO("asdf");
   }
+  
+  @PostMapping("/noLunchToday")
+  @ResponseBody
+  public ResultVO noLunchTodayPOST(HttpSession session) throws Exception{
+    logger.info(" Controller -> noLunchTodayPOST -> 밥안먹는사람~~~ : " + session.getAttribute("id"));
+    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
+    String id = (String) session.getAttribute("id");
+    
+    if(lunchMapperInterface.checkStore(id, today)){ // 있으머는 어~~~업데이트
+      logger.info("업데이트");
+      lunchMapperInterface.updateNoLunchToday(id, today);
+    }else{ // 없으면 인사트
+      int seq = lunchMapperInterface.getDateSeq(today) + 1;
+      logger.info("인써트");
+      lunchMapperInterface.noLunchToday(id,today,seq);
+    }
+    return new ResultVO("success");
+  }
+  
+  
   
   
 }
