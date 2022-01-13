@@ -20,13 +20,11 @@
 			<div id="date"></div>
 			<div id="clock"></div>
 		</div><%--.dateAndTime--%>
-		
 		<div class="menu_container">
 			<section class="office_section">
 				<input type="radio" name="office" id="복부인" value="bok"><label for="복부인" class="office">복부인<span class="${bokStore}">${bokStore}</span></label>
 				<input type="radio" name="office" id="더재무" value="the"><label for="더재무" class="office">더재무<span class="${theStore}">${theStore}</span></label>
 			</section><%--.office_section--%>
-			
 			<section class="menu_section mainMenu_section">
 				<div class="black_bg"></div><%--.black_bg--%>
 				<dl>
@@ -44,7 +42,6 @@
 					</dd>
 				</dl>
 			</section><%--.menu_section--%>
-			
 			<section class="menu_section subMenu_section">
 				<div class="black_bg"></div><%--.black_bg--%>
 				<dl>
@@ -251,9 +248,6 @@
           }
         }
 	    });
-
-
-
     });
 	</script>
 	
