@@ -1,4 +1,4 @@
-Contributor @ zuge3927@naver.com (aka css, javascript 깍는 청년) (이 청년의 포트폴리오 3.34.211.38 )
+#### Contributor @ zuge3927@naver.com (aka css, javascript 깍는 청년) <br> 이 청년의 포트폴리오 → 3.34.211.38 ( 내꺼아님 )
 ---
 # 점심시간 메뉴를 정해주는 프로젝트
 ###### 근데 이제 투표를 곁들인...
