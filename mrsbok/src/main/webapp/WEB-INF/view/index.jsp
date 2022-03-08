@@ -11,7 +11,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <link rel="icon" href="./img/logo.png">
     
     <title>점심</title>
     <link href="./css/index.css" rel="stylesheet">
@@ -23,7 +22,7 @@
 <div class="loginContainer">
     <div class="loginBox">
         <h1>LUNCH</h1>
-        <input type="text" name="id" id="id" placeholder="이름을 입력해주세요." onkeydown="if(event.keyCode == 13) doLogin();"/><br>
+        <input type="text" name="id" id="id" placeholder="이름을 입력해주세요." autofocus onkeydown="if(event.keyCode == 13) doLogin();"/><br>
         <button onclick='doLogin();'>로그인</button>
     </div>
 </div>
