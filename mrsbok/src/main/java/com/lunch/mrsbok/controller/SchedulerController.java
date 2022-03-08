@@ -1,6 +1,8 @@
-package com.lunch.mrsbok.controller;
+package com.lunch.mason.controller;
 
-import com.lunch.mrsbok.service.LunchService;
+import com.lunch.mason.domain.StoreVO;
+import com.lunch.mason.domain.StoreRandomVO;
+import com.lunch.mason.mapper.LunchMapperInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,69 +10,52 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Random;
 
 @Component
 public class SchedulerController {
 	
 	Logger logger = LoggerFactory.getLogger(SchedulerController.class);
-	private final LunchService lunchService;
 	private final LunchMapperInterface lunchMapperInterface;
-	public SchedulerController(LunchService lunchService,
-	                           LunchMapperInterface lunchMapperInterface) {
-		this.lunchService = lunchService;
+	public SchedulerController(LunchMapperInterface lunchMapperInterface) {
 		this.lunchMapperInterface = lunchMapperInterface;
 	}
-	// 시간 들으 가는가 TEST
-	//@Scheduled(cron = "*/1 * * * * *")
-	/*
-	public void datePrintTest() {
-		LocalDateTime now = LocalDateTime.now();
-		System.out.println("now : " + now);
-	}
-	*/
-	// 시간 테스트 format 사용
-	//@Scheduled(cron = "*/1 * 13 * * *")
-	/*
-	public void datePrintTest() {
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-		String today = now.format(formatter); // 01-04 양식으로 날짜 String 변수에 넣음
-	}
-	*/
+	
+	// 월~금 10시20분에 실행
+	// 선택된 식당 있으면 선택된 식당중 랜덤 선택
+	// 선택된 식당 없으면 기존 DB에 있는 식당중 랜덤 선택
 	@Scheduled(cron = "0 20 10 * * MON-FRI")
 	public void randomStore() throws Exception {
+		logger.info("cron 시작");
 		String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-		List<StoreRandomVO> bokList = lunchMapperInterface.getStoreListBokForRandom(today);
-		List<StoreRandomVO> theList = lunchMapperInterface.getStoreListTheForRandom(today);
-		logger.info("@@ bokList -> " + bokList);
-		logger.info("@@ bokList -> " + theList);
+		List<StoreRandomVO> OfficeAList = lunchMapperInterface.getStoreListOfficeAForRandom(today);
+		List<StoreRandomVO> officeBList = lunchMapperInterface.getStoreListOfficeBForRandom(today);
 		Random random = new Random();
-		String bokStore;
-		String theStore;
 		// 돌림판 돌리기
-		if(!theList.isEmpty()){ // 사용자가 정한메뉴가 있을때
-			// 돌림판 돌리고
-			theStore = theList.get(random.nextInt(theList.size())).getStorePicked();
+		if(!officeBList.isEmpty()){ // 사용자가 정한메뉴가 있을때
+			// B 사무실 랜덤 식당 디비에 넣기
+			lunchMapperInterface.insertDailyStoreOfficeB(officeBList.get(random.nextInt(officeBList.size())).getStorePicked(), today);
+			logger.info("cron 식당선택있음 사무실B");
 		} else { // 사용자가 정한 메뉴가 없을때
 			// 전체 식당 메뉴 들고 오고
-			List<StoreNameVO> list = lunchMapperInterface.getStore();
-			// 돌림판 돌리기
-			theStore = list.get(random.nextInt(list.size())).getStoreName();
-			//
+			List<StoreVO> list = lunchMapperInterface.getStore();
+			// B 사무실 랜덤 식당 디비에 넣기
+			lunchMapperInterface.insertDailyStoreOfficeB(list.get(random.nextInt(list.size())).getStore(),today);
+			logger.info("cron 식당선택없음 사무실B");
 		}
-		if(!bokList.isEmpty()){ // 사용자가 정한메뉴가 있을때
-			// 돌림판 돌리고
-			bokStore = bokList.get(random.nextInt(bokList.size())).getStorePicked();
+		if(!OfficeAList.isEmpty()){ // 사용자가 정한메뉴가 있을때
+			// A 사무실 랜덤 식당 디비에 넣기
+			lunchMapperInterface.insertDailyStoreOfficeA(OfficeAList.get(random.nextInt(OfficeAList.size())).getStorePicked(),today);
+			logger.info("cron 식당선택있음 사무실A");
 		} else { // 사용자가 정한 메뉴가 없을때
 			// 전체 식당 메뉴 들고 오고
-			List<StoreNameVO> list = lunchMapperInterface.getStore();
-			// 돌림판 돌리기
-			bokStore = list.get(random.nextInt(list.size())).getStoreName();
+			List<StoreVO> list = lunchMapperInterface.getStore();
+			// A 사무실 랜덤 식당 디비에 넣기
+			lunchMapperInterface.insertDailyStoreOfficeA(list.get(random.nextInt(list.size())).getStore(),today);
+			logger.info("cron 식당선택없음 사무실A");
 		}
-		logger.info("theStore -> " + theStore);
-		logger.info("bokStore -> " + bokStore);
-		// 사무실별 돌림판 돌린 식당 디비에 넣기
-		lunchMapperInterface.insertDailyStoreBok(bokStore,today);
-		lunchMapperInterface.insertDailyStoreThe(theStore,today);
+		
+		logger.info("cron 식당 DB에 넣음 사무실A");
 	}
 }
