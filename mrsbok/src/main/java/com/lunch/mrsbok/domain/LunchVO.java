@@ -1,4 +1,4 @@
-package com.lunch.mrsbok.domain;
+package com.lunch.mason.domain;
 
 public interface LunchVO {
 }
