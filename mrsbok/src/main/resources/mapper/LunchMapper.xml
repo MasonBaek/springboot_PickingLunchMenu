@@ -1,36 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lunch.mrsbok.mapper.LunchMapperInterface">
+<mapper namespace="com.lunch.mason.mapper.LunchMapperInterface">
+    <!--로그인 -->
     <select id="doLogin" resultType="boolean">
-        select if(count(*),'true','false')
+        select if(count(id),'true','false')
         from lunch.member
         where id = #{id}
     </select>
-    <select id="getMaxStoreNum" resultType="int">
-        select count(storeNum)
+
+    <select id="getStore" resultType="com.lunch.mason.domain.StoreVO">
+        select store
         from lunch.store
     </select>
-    <select id="getStore" resultType="String">
-        select storeName
-        from lunch.store
-        where storeNum = #{storeNum}
-    </select>
-    <select id="haveIChosenStore" resultType="com.lunch.mrsbok.domain.HaveIChosenStoreVO">
-        select if(count(*), true, false) as chosen , storePicked, office
+
+    <select id="haveIChosenStore" resultType="com.lunch.mason.domain.HaveIChosenStoreVO">
+        select store_seq , storePicked, office
         from lunch.choicestore
         where id = #{id} and date = #{today}
     </select>
     <select id="checkStore" resultType="boolean">
-        select if(count(*), true, false )
+        select if(count(store_seq), true, false )
         from lunch.choicestore
         where date = #{today} and id = #{id}
     </select>
     <select id="getDateSeq" resultType="int">
-        select if(max(date_seq), max(date_seq) ,0)
+        select if(count(date), max(date_seq) ,0)
         from lunch.choicestore
         where date = #{today}
     </select>
+    <select id="getDateSeqFromChoiceStore" resultType="int">
+        select if(count(date), max(date_seq) ,0)
+        from lunch.choicemenu
+        where date = #{today}
+    </select>
+
+    <select id="getMaxStoreNum" resultType="int">
+        select MAX(storeNum)
+        from lunch.store
+    </select>
+    <insert id="insertNewStore">
+        insert into lunch.store(store, minimum_price, delivery_tip, delivery_detail)
+        values (#{store}, #{minimum_price}, #{delivery_tip}, #{delivery_detail})
+    </insert>
+
     <insert id="choiceStore">
         insert into lunch.choicestore(date_seq, date, id , storePicked, office)
         values (#{date_seq}, #{today}, #{id}, #{storePicked}, #{office})
@@ -41,18 +54,148 @@
         where date = #{today} and id = #{id}
     </update>
     <select id="checkStoreForList" resultType="int">
-        select if(count(*), count(*), false) as checkStore
+        select if(count(date), count(date), false) as checkStore
         from lunch.choicestore
         where date = #{today};
     </select>
-    <select id="getStoreListBok" resultType="StorePickedListVO">
+    <select id="getStoreListOfficeA" resultType="StorePickedListVO">
         select id, storePicked, office
         from lunch.choicestore
-        where date = #{today} AND office = 'bok'
+        where date = #{today} AND office = 'OfficeA'
     </select>
-    <select id="getStoreListThe" resultType="StorePickedListVO">
+    <select id="getStoreListOfficeB" resultType="StorePickedListVO">
         select id, storePicked, office
         from lunch.choicestore
-        where date = #{today} AND office = 'the'
+        where date = #{today} AND office = 'OfficeB'
     </select>
+
+    <!-- 점심 안먹음 -->
+    <insert id="noLunchTodayStore">
+        insert into lunch.choicestore(date_seq, date, id , storePicked, office)
+        values (#{date_seq}, #{today}, #{id}, 'noLunch', 'noLunch')
+    </insert>
+    <insert id="noLunchTodayMenu">
+        insert into lunch.choicemenu(menu_seq, date, office, id , store, menu)
+        values (0, #{today}, 'noLunch', #{id}, 'noLunch', 'noLunch')
+    </insert>
+
+    <!-- 점심 안먹음 -->
+
+    <update id="updateNoLunchTodayStore">
+        update lunch.choicestore
+        set storePicked = 'noLunch', office = 'noLunch'
+        where date = #{today} and id = #{id}
+    </update>
+    <update id="updateNoLunchTodayMenu">
+        update lunch.choicemenu
+        set store = 'noLunch', office = 'noLunch', menu = 'noLunch'
+        where date = #{today} and id = #{id}
+    </update>
+    <!-- 점심 안먹음 -->
+
+
+
+    <select id="getStoreListOfficeAForRandom" resultType="StoreRandomVO">
+        select storePicked
+        from lunch.choicestore
+        where date = #{today} AND office = 'OfficeA'
+    </select>
+    <select id="getStoreListOfficeBForRandom" resultType="StoreRandomVO">
+        select storePicked
+        from lunch.choicestore
+        where date = #{today} AND office = 'OfficeB'
+    </select>
+    <insert id="insertDailyStoreOfficeA">
+        insert into lunch.dailystore(date,office,store)
+        values(#{today},'OfficeA',#{store})
+    </insert>
+    <insert id="insertDailyStoreOfficeB">
+        insert into lunch.dailystore(date,office,store)
+        values(#{today},'OfficeB',#{store})
+    </insert>
+    <select id="getOfficeAStoreForMenu" resultType="string">
+        select store
+        from lunch.dailystore
+        where date = #{today} AND office = 'OfficeA'
+    </select>
+    <select id="getOfficeBStoreForMenu" resultType="string">
+        select store
+        from lunch.dailystore
+        where date = #{today} AND office = 'OfficeB'
+    </select>
+    <select id="getMenuList" resultType="com.lunch.mason.domain.MenuListVO">
+        select *
+        from lunch.menu
+        where store = #{store}
+    </select>
+    <select id="getDailyStore" resultType="string">
+        select store
+        from lunch.dailystore
+        where date = #{today} AND office = #{office}
+    </select>
+    <select id="getSubmenuSeq" resultType="int">
+        select submenu_seq
+        from lunch.submenu
+        where menu_seq = #{menu_seq}
+    </select>
+    <select id="getSubMenuList" resultType="com.lunch.mason.domain.SubMenuListVO">
+        select submenu_seq, menu_seq, submenu_status, submenu
+        from lunch.submenu
+        where submenu_seq = #{submenu_seq}
+    </select>
+    <select id="getSubmenuOption" resultType="com.lunch.mason.domain.Submenu_OptionVO">
+        select *
+        from lunch.submenu_option
+        where submenu_seq = #{submenu_seq}
+    </select>
+    <select id="getAddMenuList" resultType="com.lunch.mason.domain.AddMenuListVO">
+        select *
+        from lunch.addmenu
+        where menu_seq = #{menu_seq}
+    </select>
+
+    <insert id="insertMainMenu" parameterType="com.lunch.mason.domain.MainMenuVO">
+        insert into lunch.menu(store, menu, price, amount)
+        values(#{store},#{menu},#{price},#{info})
+    </insert>
+    <select id="getLatestMenuSeq" resultType="int">
+        select MAX(menu_seq)
+        from lunch.menu
+    </select>
+
+    <insert id="insertChoiceMenu" parameterType="com.lunch.mason.domain.ChoiceMenuVO">
+        insert into lunch.choicemenu(menu_seq,date_seq, date, office, id, store, menu, menu_option, addmenu)
+        values(#{menu_seq},#{date_seq}, #{date},#{office},#{id},#{store},#{menu},#{menu_option},#{addmenu})
+    </insert>
+
+    <select id="getMyOrderList" resultType="com.lunch.mason.domain.MyOrderListVO">
+        select choicemenuseq, store, menu, menu_option, addmenu
+        from lunch.choicemenu
+        where id = #{id} AND date = #{today}
+    </select>
+
+    <delete id="deleteOrder" parameterType="int">
+        delete from lunch.choicemenu
+        where choicemenuseq = #{choicemenuseq}
+    </delete>
+
+    <select id="getOrderList" resultType="com.lunch.mason.domain.ChoiceMenuVO">
+        select *
+        from lunch.choicemenu
+        where date = #{today} AND office = #{office}
+        ORDER BY menu, menu_option, addmenu
+    </select>
+
+    <select id="getstoreNum" resultType="int">
+        select storenum
+        from lunch.store
+        where store = #{store}
+    </select>
+
+    <select id="getLunchCount" resultType="com.lunch.mason.domain.MemberVO">
+        select id
+        from lunch.choicemenu
+        where office = #{office} AND date = #{today}
+    </select>
+
 </mapper>
