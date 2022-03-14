@@ -459,17 +459,7 @@
                   $("#menu .menu_container > section.menu_section dl dd ul li.active").removeClass("active");
                 });
               }
-              
-              
-              
 
-            // if (data.result == 'success') {
-            //   swal();
-            // }else if(data.result == success){
-            //   alert('문자열아이다잉')
-            // }else {
-            //   alert('식당 선택 error')
-            // }
           },
           error:function(e){
             alert(e+"\nerror");
