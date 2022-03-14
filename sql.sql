@@ -42,7 +42,7 @@ CREATE TABLE `member` (
 
 /* menu */
 CREATE TABLE `menu` (
-                        `menu_seq` int(11) NOT NULL,
+                        `menu_seq` int(11) NOT NULL AUTO_INCREMENT,
                         `storeNum` int(11) DEFAULT NULL,
                         `store` varchar(45) COLLATE utf8_bin DEFAULT NULL,
                         `menu` varchar(45) COLLATE utf8_bin DEFAULT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `menu` (
                         `amount` varchar(200) COLLATE utf8_bin DEFAULT NULL,
                         `popular` int(11) DEFAULT NULL,
                         PRIMARY KEY (`menu_seq`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=570 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /* store */
 CREATE TABLE `store` (
