@@ -1,10 +1,8 @@
-package com.lunch.mrsbok.controller;
+package com.lunch.mason.controller;
 
-import com.lunch.mrsbok.domain.HaveIChosenStoreVO;
-import com.lunch.mrsbok.domain.MenuListVO;
-import com.lunch.mrsbok.domain.StoreNameVO;
-import com.lunch.mrsbok.mapper.LunchMapperInterface;
-import com.lunch.mrsbok.service.LunchService;
+import com.lunch.mason.domain.*;
+import com.lunch.mason.mapper.LunchMapperInterface;
+import com.lunch.mason.service.LunchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,13 +14,13 @@ import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/*")
 public class ViewController {
   Logger logger = LoggerFactory.getLogger(ViewController.class);
+  
   
   private final LunchMapperInterface lunchMapperInterface;
   private final LunchService lunchService;
@@ -35,35 +33,32 @@ public class ViewController {
   
   @RequestMapping("/")
   public String index() throws Exception{
-    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-09-29-00"));
+    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-08-29-00"));
     String last = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-13-01-00"));
     SimpleDateFormat SDF = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
     Date firstParse = SDF.parse(first);
     Date lastParse = SDF.parse(last);
-    //if(new Date().after(firstParse) && new Date().before(lastParse) ){
+    logger.info("\n\t\t 홈 ");
+    
+    if(new Date().after(firstParse) && new Date().before(lastParse) ){
       return "index";
-    //}
-    //return "ready";
+    }
+    return "ready";
   }
-  
-  @RequestMapping("/index")
-  public String index2nd() {
-    return "redirect:/";
-  }
-  
+    
+  /* lunch */
   @RequestMapping("/lunch")
   public String lunch(HttpSession session, Model model) throws  Exception {
     if(session.getAttribute("id")==null){
-      return "redirect:/index";
+      return "redirect:/";
     }
-    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-09-29-00"));
+    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-08-29-00"));
     String second = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-10-19-00"));
     String last = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-13-01-00"));
     SimpleDateFormat SDF = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
     Date firstParse = SDF.parse(first);
     Date secondParse = SDF.parse(second);
     Date lastParse = SDF.parse(last);
-    
     logger.info("secondParse -> " + secondParse);
     if(new Date().after(secondParse) && new Date().before(lastParse) ){
       logger.info("10시 20분 부터 /menu페이지로 이동");
@@ -72,123 +67,158 @@ public class ViewController {
       return "redirect:/ready";
     }
     
-    
-    //DateTimeFormatter formatter = ;
-    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-    
     // 식당리스트 가져오기
-    List<StoreNameVO> list = lunchService.getStoreList();
-    logger.info("list -> " + list);
-    logger.info("선택한 식당 있냐? 날짜 :"+today);
-    // 내가 선택한 식당 있나? 있으면 가져오기
-    HaveIChosenStoreVO haveI;
-    try {
-      haveI = lunchMapperInterface.haveIChosenStore((String)session.getAttribute("id"),today);
-      logger.info("choiceStore 정상 리턴2 :"+haveI.getStorePicked());
-      model.addAttribute("choiceStore",haveI);
-    }catch (NullPointerException e) {
-      logger.info("NullPointerException 발생");
-      model.addAttribute("choiceStore",false);
-    }
-    //전체 유저의 식당,사무실 리스트 가져오기
-    List checkStoreListThe = lunchService.checkStoreListThe(today);
-    List checkStoreListBok = lunchService.checkStoreListBok(today);
-    // [0] 번 인데스가 '1'이면 리스트 있음 '0'이면 없음
-    model.addAttribute("checkStoreListThe", checkStoreListThe);
-    model.addAttribute("checkStoreListBok", checkStoreListBok);
-    // 리스트 넘기기
+    List<StoreVO> list = lunchService.getStoreList();
+    logger.info("list -> "+ list);
     model.addAttribute("storeList",list);
+    // 내가 선택한 식당 있나? 있으면 가져오기
+    HaveIChosenStoreVO haveIChosenStoreVO = lunchMapperInterface.haveIChosenStore((String) session.getAttribute("id"), today());
+    logger.info("haveI"+haveIChosenStoreVO);
+    model.addAttribute("choiceStore -> ",haveIChosenStoreVO);
+    //전체 유저의 식당,사무실 리스트 가져오기
+    List checkStoreListOfficeB = lunchService.getStoreListOfficeB(today());
+    List checkStoreListOfficeA = lunchService.getStoreListOfficeA(today());
+    
+    model.addAttribute("StoreListOfficeB", checkStoreListOfficeB);
+    model.addAttribute("StoreListOfficeA", checkStoreListOfficeA);
+    // 리스트 넘기기
     //model.
     return "lunch";
   }
   
-  @RequestMapping("/lunch_officeBok")
-  public String lunch_officeBok(Model model) {
-    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-    List checkStoreListBok = lunchService.checkStoreListBok(today);
-    model.addAttribute("checkStoreListBok", checkStoreListBok);
-    return "lunch_officeBok";
+  
+  @RequestMapping("/lunch_officeA")
+  public String lunch_OfficeA(Model model) {
+    List getStoreListOfficeA = lunchService.getStoreListOfficeA(today());
+    model.addAttribute("StoreListOfficeA", getStoreListOfficeA);
+    return "lunch_officeA";
   }
   
-  @RequestMapping("/lunch_officeThe")
+  @RequestMapping("/lunch_officeB")
   public String lunch_officeThe(Model model) {
-    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-    List checkStoreListThe = lunchService.checkStoreListThe(today);
-    model.addAttribute("checkStoreListThe", checkStoreListThe);
-    return "lunch_officeThe";
+    List getStoreListOfficeB = lunchService.getStoreListOfficeB(today());
+    model.addAttribute("StoreListOfficeB", getStoreListOfficeB);
+    return "lunch_officeB";
   }
+  /* lunch */
   
+  /* menu */
   @RequestMapping("/menu")
   public String menu(HttpSession session, Model model) throws Exception{
     if(session.getAttribute("id")==null){
-      return "redirect:/index";
+      return "redirect:/";
     }
-    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-09-29-00"));
+    // id값 넘겨주기
+    model.addAttribute("id", session.getAttribute("id"));
+    String first = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-08-29-00"));
     String second = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-10-19-00"));
     String last = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd-13-01-00"));
     SimpleDateFormat SDF = new SimpleDateFormat("yy-MM-dd-HH-mm-ss");
     Date firstParse = SDF.parse(first);
     Date secondParse = SDF.parse(second);
     Date lastParse = SDF.parse(last);
-    
     logger.info("secondParse -> " + secondParse);
     logger.info("lastParse -> " + lastParse);
-    /*
-    if(new Date().after(firstParse) && new Date().before(secondParse)){
-      logger.info("넌 아직 준비가 안됐다 lunch로 돌아가라 네 이놈 !");
+    if (new Date().after(firstParse) && new Date().before(secondParse)) {
       return "redirect:/lunch";
     }else if(new Date().before(firstParse) || new Date().after(lastParse) ){
-      logger.info("ready로 돌아가기");
       return "redirect:/ready";
     }
-    */
-    // 사무실별 식당
-    String bokStore = lunchMapperInterface.getBokStoreForMenu(today);
-    String theStore = lunchMapperInterface.getTheStoreForMenu(today);
-    logger.info(" Controller -> /menu bokStore : " + bokStore);
-    logger.info(" Controller -> /menu theStore : " + theStore);
-    model.addAttribute("theStore", theStore);
-    model.addAttribute("bokStore", bokStore);
-    // 식당별 메뉴
-    /*
-    List<MenuListVO> bokMenuList = lunchMapperInterface.getBokMenu(bokStore);
-    List<MenuListVO> theMenuList = lunchMapperInterface.getTheMenu(theStore);
-    logger.info(" Controller -> /menu bokMenuList : " + bokMenuList);
-    logger.info(" Controller -> /menu bokMenuList.size() : " + bokMenuList.size());
-    logger.info(" Controller -> /menu theMenuList : " + theMenuList);
-    logger.info(" Controller -> /menu theMenuList.size() : " + theMenuList.size());
-    if(bokMenuList.isEmpty()){
-      bokMenuList = null;
-    }
-    if(theMenuList.isEmpty()){
-      theMenuList = null;
-    }
-    logger.info(" Controller -> /menu bokMenuList 2 : " + bokMenuList);
-    logger.info(" Controller -> /menu theMenuList 2 : " + theMenuList);
+    model.addAttribute("OfficeBStore", lunchMapperInterface.getOfficeBStoreForMenu(today()));
+    model.addAttribute("OfficeAStore", lunchMapperInterface.getOfficeAStoreForMenu(today()));
     
-    model.addAttribute("theMenuList", theMenuList);
-    model.addAttribute("bokMenuList", bokMenuList);
-    */
-    // 메뉴하위 서브메뉴는 메뉴선택하면 ajax통신으로 불러옴
-        
     return "menu";
   }
+  /* menu */
   
   @RequestMapping("/mainMenuList")
   public String mainMenuList(@RequestParam String office, Model model) {
-    String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
-    String store = lunchMapperInterface.getDailyStore(office, today);
+    String store = lunchMapperInterface.getDailyStore(office, today());
     List<MenuListVO> menuList = lunchMapperInterface.getMenuList(store);
-    
-    if(menuList.isEmpty()) menuList = null;
-    model.addAttribute("menuList", menuList);
+    if (menuList.isEmpty()) {
+      model.addAttribute("store", store);
+    } else {
+      model.addAttribute("menuList", menuList);
+    }
     return "mainMenuList";
   }
-  /*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-  @RequestMapping("/test")
-  public String test1() {
-    return "test";
+
+  /* subMenuList */
+  @RequestMapping("/subMenuList")
+  public String subMenuList(@RequestParam int menu_seq, Model model){
+    logger.info("@@@@@@getSubMenuList 시작");
+// submenu_seq 먼저 들고오기
+    List<Integer> getSubmenuSeq = lunchMapperInterface.getSubmenuSeq(menu_seq);
+    List<SubMenuListVO> subMenuList = new ArrayList<>();
+    for(int submenu_seq : getSubmenuSeq){
+      // 해당 메뉴의 서브메뉴 가져오기
+      SubMenuListVO sVO = lunchMapperInterface.getSubMenuList(submenu_seq);
+      // 서브메뉴의 서브옵션 가져오기
+      sVO.setSubmenu_optionVO(lunchMapperInterface.getSubmenuOption(submenu_seq));
+      System.out.println("sVO->"+sVO);
+      subMenuList.add(sVO);
+    }
+    model.addAttribute("subMenuList", subMenuList);
+    logger.info("@@@@@@getSubMenuList 끝");
+    return "subMenuList";
+  }
+  /* subMenuList */
+  
+  @RequestMapping("/addMenuList")
+  public String addMenuList(@RequestParam int menu_seq, Model model){
+    logger.info(" Controller getAddMenuList 시작");
+    List<AddMenuListVO> addMenuList = lunchMapperInterface.getAddMenuList(menu_seq);
+    if(addMenuList.isEmpty()) {
+      model.addAttribute("addMenuList", null);
+    }
+    model.addAttribute("addMenuList", addMenuList);
+    logger.info(" Controller getAddMenuList 끝");
+    return "addMenuList";
   }
   
+  @RequestMapping("/myOrderList")
+  public String myOrderList(HttpSession session, Model model) {
+    logger.info("today -> "+ today());
+    List<MyOrderListVO> myOrderListVO = lunchService.getMyOrderlist((String) session.getAttribute("id"), today());
+    logger.info("orderList -> "+ myOrderListVO);
+    if (myOrderListVO.isEmpty()) {
+      model.addAttribute("myOrderList", null);
+      logger.info("orderList empty-> "+ model.getAttribute("myOrderList"));
+    } else {
+      model.addAttribute("myOrderList", myOrderListVO);
+    }
+    return "myOrderList";
+  }
+  
+  @RequestMapping("/orderList")
+  public String orderList(@RequestParam String office, Model model){
+    List<ChoiceMenuVO> orderList = lunchService.getOrderList(today(), office);
+    if (orderList.isEmpty()) {
+      model.addAttribute("orderList", null);
+    } else {
+      model.addAttribute("orderList", orderList);
+    }
+    model.addAttribute("office", office.equals("OfficeA") ? "사무실A" : "사무실B");
+    return "orderList";
+  }
+  
+  @RequestMapping("/lunchCount")
+  public String lunchCount(Model model){
+    logger.info("today -> "+ today());
+    
+    model.addAttribute("OfficeACount", lunchMapperInterface.getLunchCount(today(),"OfficeA"));
+    model.addAttribute("OfficeBCount", lunchMapperInterface.getLunchCount(today(),"OfficeB"));
+    model.addAttribute("noLunchCount", lunchMapperInterface.getLunchCount(today(),"noLunch"));
+    return "lunchCount";
+  }
+  
+  @RequestMapping("/ready")
+  public String ready() {
+    return "/ready";
+  }
+  
+  public String today() {
+    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy-MM-dd"));
+  }
+
 }
